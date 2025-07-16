@@ -1,45 +1,55 @@
 from openai import OpenAI
+from fpdf import FPDF
+import os
 
 client = OpenAI(
-  base_url="https://openrouter.ai/api/v1",
-  api_key="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",
+    base_url="https://openrouter.ai/api/v1",
+    api_key="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",  # Replace with your real one
 )
+
+topic = input("Enter topic: ")
+tot_content = f"""
+Generate structured textbook material for the topic "{topic}".
+
+Include the following:
+1. Chapter-wise breakdown (at least 3 chapters)
+2. Summary at the end of each chapter
+3. 3 MCQs at the end with 4 options each
+4. Clearly mark the correct answer for each MCQ
+
+Make the tone educational, clear, and concise.
+"""
 
 completion = client.chat.completions.create(
-  extra_headers={
-    "HTTP-Referer": "<YOUR_SITE_URL>", # Optional. Site URL for rankings on openrouter.ai.
-    "X-Title": "<YOUR_SITE_NAME>", # Optional. Site title for rankings on openrouter.ai.
-  },
-  extra_body={},
-  model="tngtech/deepseek-r1t2-chimera:free",
-  messages=[
-    {
-      "role": "user",
-      "content": "the topic is about the sport volleyball. i the description a the volleyball aas a chapter and first it should ahave Chapter-wise content ,Summaries, MCQs with options + correct answer"
+    model="tngtech/deepseek-r1t2-chimera:free",
+    messages=[{"role": "user", "content": tot_content}],
+    extra_headers={
+        "HTTP-Referer": "http://localhost/",
+        "X-Title": "TextbookGenerator"
     }
-  ]
 )
-from fpdf import FPDF
 
-# Assume this is your response content from the API
-output = completion.choices[0].message.content
+# Extract output
+try:
+    output = completion.choices[0].message.content
+    print("🔎 Output Preview:\n", output[:300])  # Print first few lines
+except Exception as e:
+    print("❌ Failed to get output:", e)
+    exit()
 
-# Function to clean text by replacing unsupported characters
+# Save to PDF
 def clean_text(text):
     return text.encode('latin-1', 'replace').decode('latin-1')
 
-# Clean the output string
 output_clean = clean_text(output)
-
-# Create a PDF class instance
 pdf = FPDF()
 pdf.set_auto_page_break(auto=True, margin=15)
 pdf.add_page()
 pdf.set_font("Arial", size=12)
 
-# Write each line to the PDF safely
 for line in output_clean.split('\n'):
     pdf.multi_cell(0, 10, line)
 
-# Save the PDF
-pdf.output("volleyball_content.pdf")
+filename = f"{topic}.pdf"
+pdf.output(filename)
+print(f"✅ PDF generated: {filename}")
