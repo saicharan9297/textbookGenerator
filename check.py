@@ -2,17 +2,19 @@ from openai import OpenAI
 from fpdf import FPDF
 import os
 
+# Read topic from environment variable or use default
+topic = os.getenv("TOPIC", "AI and Machine Learning")
+
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",  # Replace with your real one
+    api_key=os.getenv("OPENROUTER_API_KEY"),
 )
 
-topic = input("Enter topic: ")
 tot_content = f"""
 Generate structured textbook material for the topic "{topic}".
 
 Include the following:
-1. Chapter-wise breakdown (at least 10 chapters)
+1. Chapter-wise breakdown (at least 5 chapters)
 2. Summary at the end of each chapter
 3. 3 MCQs at the end with 4 options each
 4. Clearly mark the correct answer for each MCQ
