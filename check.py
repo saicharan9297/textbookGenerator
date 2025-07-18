@@ -12,7 +12,7 @@ tot_content = f"""
 Generate structured textbook material for the topic "{topic}".
 
 Include the following:
-1. Chapter-wise breakdown (at least 3 chapters)
+1. Chapter-wise breakdown (at least 10 chapters)
 2. Summary at the end of each chapter
 3. 3 MCQs at the end with 4 options each
 4. Clearly mark the correct answer for each MCQ
