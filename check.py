@@ -7,8 +7,14 @@ topic = os.getenv("TOPIC", "AI and Machine Learning")
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv("OPENROUTER_API_KEY"),
+    api_key=os.getenv("OPENAI_API_KEY"),
+    default_headers={
+        "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}",
+        "HTTP-Referer": "http://localhost/",
+        "X-Title": "TextbookGenerator"
+    }
 )
+
 
 tot_content = f"""
 Generate structured textbook material for the topic "{topic}".
