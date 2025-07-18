@@ -2,14 +2,12 @@ from openai import OpenAI
 from fpdf import FPDF
 import os
 
-# Read topic from environment variable or use default
-topic = os.getenv("TOPIC", "AI and Machine Learning")
-
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv("OPENROUTER_API_KEY"),
+    api_key="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",  # Replace with your real one
 )
 
+topic = input("Enter topic: ")
 tot_content = f"""
 Generate structured textbook material for the topic "{topic}".
 
