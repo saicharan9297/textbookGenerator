@@ -65,7 +65,12 @@ def generate():
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
 
-    pdf.add_font("DejaVu", "", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", uni=True)
+    # ✅ Unicode-compatible font handling
+    font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+    if not os.path.exists(font_path):
+        raise RuntimeError(f"Font not found at: {font_path}")
+
+    pdf.add_font("DejaVu", "", font_path, uni=True)
     pdf.set_font("DejaVu", size=12)
 
     for line in output.split("\n"):
@@ -76,3 +81,5 @@ def generate():
 
     return send_file(filename, as_attachment=True, download_name=f"{topic}.pdf")
 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
