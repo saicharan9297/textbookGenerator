@@ -64,7 +64,9 @@ def generate():
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+
+    pdf.add_font("DejaVu", "", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", uni=True)
+    pdf.set_font("DejaVu", size=12)
 
     for line in output.split("\n"):
         pdf.multi_cell(0, 10, line)
@@ -74,5 +76,3 @@ def generate():
 
     return send_file(filename, as_attachment=True, download_name=f"{topic}.pdf")
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
